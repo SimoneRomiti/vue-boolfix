@@ -22,7 +22,6 @@ var app = new Vue(
           self.films = response.data.results;
           console.log(self.films);
         })
-
       }
     }
   }
