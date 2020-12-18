@@ -4,6 +4,9 @@ var app = new Vue(
     data: {
       films: [],
       searchedString: "",
+      nullColor: 'grey',
+      notAvailableImage: "img/image-not-available.png",
+      initialPath: "https://image.tmdb.org/t/p/w220_and_h330_face",
     },
 
     methods: {
@@ -21,6 +24,7 @@ var app = new Vue(
         .then(function(response){
           self.films = response.data.results;
           console.log(self.films);
+          console.log(self.films[0].poster_path == null);
         })
       }
     }

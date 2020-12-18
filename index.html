@@ -21,7 +21,7 @@
       </header>
 
       <main>
-        <div v-for="film in films" class="movie-poster" :style="{backgroundImage : 'url(' + 'https://image.tmdb.org/t/p/w220_and_h330_face' + film.poster_path +')'}">
+        <div v-for="film in films" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
           <div class="informations">
             <div class="title spacing">
               <strong>Titolo: </strong>

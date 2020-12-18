@@ -40,6 +40,7 @@ main{
   margin: 10px;
   height: 330px;
   width: 220px;
+  background-position: center;
   background-size: cover;
   border-radius: 5px;
 }
@@ -67,6 +68,7 @@ main{
   cursor: pointer;
 }
 
+/* MODIFICA SCROLLBAR */
 ::-webkit-scrollbar{
   width: 8px;
   height:0.8em;
@@ -97,6 +99,7 @@ main{
   cursor: pointer;
   border: none;
 }
+/* FINE MODIFICA SCROLLBAR */
 
 
 .movie-poster .spacing{
