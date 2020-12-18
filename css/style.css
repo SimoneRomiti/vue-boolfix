@@ -6,6 +6,7 @@
 
 body{
   background: #141414;
+  font-family: 'Lato', sans-serif;
 }
 
 header{
@@ -37,15 +38,23 @@ main{
 }
 .movie-poster{
   margin: 10px;
-  padding: 15px;
   height: 330px;
   width: 220px;
-  background: red;
+  background-image: url('../img/howimetyourmother.jpg');
+  background-size: cover;
+  border-radius: 5px;
+}
+
+.informations{
+  height: 330px;
+  width: 220px;
+  padding: 15px;
+  background: black;
+  border: 1px solid white;
+  color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
-  /* text-align: center; */
 }
 
 .movie-poster .spacing{
