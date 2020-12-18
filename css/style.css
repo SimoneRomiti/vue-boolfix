@@ -15,4 +15,39 @@ header{
   left: 0;
   height: 10vh;
   background: rgba(0, 0, 0, 0.5);
+  padding: 0 40px;
+}
+
+header img{
+  height: 10vh;
+}
+
+header .search{
+  float: right;
+  clear: left;
+  line-height: 10vh;
+}
+
+main{
+  margin-top: 15vh;
+  padding: 30px 80px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.movie-poster{
+  margin: 10px;
+  padding: 15px;
+  height: 330px;
+  width: 220px;
+  background: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  /* text-align: center; */
+}
+
+.movie-poster .spacing{
+  margin: 5px 0;
 }
