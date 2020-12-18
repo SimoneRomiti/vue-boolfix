@@ -55,6 +55,16 @@ main{
   display: flex;
   flex-direction: column;
   justify-content: center;
+  opacity: 0;
+  transition: opacity .5s;
+}
+
+.informations:hover{
+  opacity: 1;
+}
+
+.informations:hover{
+  cursor: pointer;
 }
 
 .movie-poster .spacing{
