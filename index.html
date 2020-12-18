@@ -15,112 +15,33 @@
       <header>
         <img src="img/netflix.png" alt="">
         <div class="search">
-          <input type="text" name="" value="">
-          <button type="button" name="button">SEARCH</button>
+          <input v-model="searchedString" type="text" name="" value="">
+          <button @click="searchFilm()" type="button" name="button">SEARCH</button>
         </div>
       </header>
 
       <main>
-        <div class="movie-poster">
+        <div v-for="film in films" class="movie-poster" :style="{backgroundImage : 'url(' + 'https://image.tmdb.org/t/p/w220_and_h330_face' + film.poster_path +')'}">
           <div class="informations">
             <div class="title spacing">
               <strong>Titolo: </strong>
-              How i met your mother
+              {{ film.title }}
             </div>
             <div class="original-title spacing">
               <strong>Titolo originale: </strong>
-              How i met your mother
+              {{ film.original_title }}
             </div>
             <div class="vote spacing">
               <strong>Voto: </strong>
             </div>
             <div class="overview spacing">
               <strong>Overview: </strong>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam sequi odio in?
-            </div>
-          </div>
-        </div>
-
-        <div class="movie-poster">
-          <div class="informations">
-            <div class="title spacing">
-              <strong>Titolo: </strong>
-              How i met your mother
-            </div>
-            <div class="original-title spacing">
-              <strong>Titolo originale: </strong>
-              How i met your mother
-            </div>
-            <div class="vote spacing">
-              <strong>Voto: </strong>
-            </div>
-            <div class="overview spacing">
-              <strong>Overview: </strong>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam sequi odio in?
-            </div>
-          </div>
-        </div>
-
-        <div class="movie-poster">
-          <div class="informations">
-            <div class="title spacing">
-              <strong>Titolo: </strong>
-              How i met your mother
-            </div>
-            <div class="original-title spacing">
-              <strong>Titolo originale: </strong>
-              How i met your mother
-            </div>
-            <div class="vote spacing">
-              <strong>Voto: </strong>
-            </div>
-            <div class="overview spacing">
-              <strong>Overview: </strong>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam sequi odio in?
-            </div>
-          </div>
-        </div>
-
-        <div class="movie-poster">
-          <div class="informations">
-            <div class="title spacing">
-              <strong>Titolo: </strong>
-              How i met your mother
-            </div>
-            <div class="original-title spacing">
-              <strong>Titolo originale: </strong>
-              How i met your mother
-            </div>
-            <div class="vote spacing">
-              <strong>Voto: </strong>
-            </div>
-            <div class="overview spacing">
-              <strong>Overview: </strong>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam sequi odio in?
-            </div>
-          </div>
-        </div>
-
-        <div class="movie-poster">
-          <div class="informations">
-            <div class="title spacing">
-              <strong>Titolo: </strong>
-              How i met your mother
-            </div>
-            <div class="original-title spacing">
-              <strong>Titolo originale: </strong>
-              How i met your mother
-            </div>
-            <div class="vote spacing">
-              <strong>Voto: </strong>
-            </div>
-            <div class="overview spacing">
-              <strong>Overview: </strong>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam sequi odio in?
+              {{ film.overview }}
             </div>
           </div>
         </div>
       </main>
+    </div>
 
 
     <script src="js/script.js" charset="utf-8"></script>
