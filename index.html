@@ -15,13 +15,13 @@
       <header>
         <img src="img/netflix.png" alt="">
         <div class="search">
-          <input v-model="searchedString" type="text" name="" value="">
-          <button @click="searchFilm()" type="button" name="button">SEARCH</button>
+          <input v-model="searchedString" @keydown="searchFilmEnterKey()" type="text" name="" value="">
+          <button @click="searchFilm()" type="button" name="button"><strong>SEARCH</strong></button>
         </div>
       </header>
 
       <main>
-        <div v-for="film in films" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
+        <div v-if="visible" v-for="film in films" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
           <div class="informations">
             <div class="title spacing">
               <strong>Titolo: </strong>

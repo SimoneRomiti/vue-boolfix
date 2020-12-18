@@ -11,6 +11,7 @@ body{
 
 header{
   position: fixed;
+  z-index: 1;
   top: 0;
   right: 0;
   left: 0;
@@ -27,6 +28,17 @@ header .search{
   float: right;
   clear: left;
   line-height: 10vh;
+}
+
+header button,header input{
+  padding: 5px 10px;
+  border: 2px solid black;
+}
+
+header button:hover{
+  cursor: pointer;
+  border: 2px solid #E40914;
+  outline: none;
 }
 
 main{
