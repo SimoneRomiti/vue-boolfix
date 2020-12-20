@@ -80,6 +80,10 @@ main{
   cursor: pointer;
 }
 
+.vote i{
+  color: yellow;
+}
+
 /* MODIFICA SCROLLBAR */
 ::-webkit-scrollbar{
   width: 8px;

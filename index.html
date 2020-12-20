@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.css" integrity="sha512-f73UKwzP1Oia45eqHpHwzJtFLpvULbhVpEJfaWczo/ZCV5NWSnK4vLDnjTaMps28ocZ05RbI83k2RlQH92zy7A==" crossorigin="anonymous" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -21,7 +22,7 @@
       </header>
 
       <main>
-        <div v-if="visible" v-for="film in films" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
+        <div v-if="visible" v-for="(film, index) in films" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
           <div class="informations">
             <div class="title spacing">
               <strong>Titolo: </strong>
@@ -33,6 +34,9 @@
             </div>
             <div class="vote spacing">
               <strong>Voto: </strong>
+              <i v-for="item in Math.floor(vote[index] / 2)" class="fas fa-star"></i>
+              <i v-if="vote[index] % 2 == 1" class="fas fa-star-half-alt"></i>
+              <i v-for="item in (Math.floor(5 - (vote[index]) / 2))" class="far fa-star"></i>
             </div>
             <div class="overview spacing">
               <strong>Overview: </strong>

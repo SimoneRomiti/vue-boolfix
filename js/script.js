@@ -7,7 +7,8 @@ var app = new Vue(
       nullColor: 'grey',
       notAvailableImage: "img/image-not-available.png",
       initialPath: "https://image.tmdb.org/t/p/w220_and_h330_face",
-      visible: true
+      visible: true,
+      vote: []
     },
 
     methods: {
@@ -32,8 +33,11 @@ var app = new Vue(
           .then(function(response){
 
             self.films = response.data.results;
-            console.log(self.films);
-            console.log(self.films[0].poster_path == null);
+            console.log("response", self.films);
+            for(var i = 0; i < self.films.length; i++){
+              self.vote[i] = Math.ceil(self.films[i].vote_average);
+            }
+            console.log(self.vote);
           })
         }
       },
