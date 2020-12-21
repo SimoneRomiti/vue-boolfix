@@ -16,6 +16,7 @@ var app = new Vue(
     methods: {
       searchFilm: function(){
         var self = this;
+
         let getOne = axios
         .get('https://api.themoviedb.org/3/search/movie',
         {
@@ -47,23 +48,24 @@ var app = new Vue(
             self.films = [];
 
             self.all = response[0].data.results.concat(response[1].data.results);
+
+            self.all.sort(function(a, b){
+              return b.popularity - a.popularity;
+            })
+
             console.log("all", self.all);
-             var i = 0;
+            var i = 0;
             while(i < 20 && self.all[i] != null){
               self.films.push(self.all[i]);
               i++;
             }
-
-            self.films.sort(function(a, b){
-              return b.popularity - a.popularity;
-            })
 
             console.log("films", self.films);
 
             for(var i = 0; i < self.films.length; i++){
               self.vote[i] = Math.ceil(self.films[i].vote_average);
             }
-            console.log(self.vote);
+            console.log("vote", self.vote);
           })
         }
       },
