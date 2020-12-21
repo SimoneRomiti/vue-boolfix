@@ -80,6 +80,11 @@ main{
   cursor: pointer;
 }
 
+.language img{
+  width: 20%;
+  vertical-align: middle;
+}
+
 .vote i{
   color: yellow;
 }

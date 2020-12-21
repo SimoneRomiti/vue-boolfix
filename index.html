@@ -5,6 +5,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title></title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.js" integrity="sha512-bYkaBWaFtfPIMYt9+CX/4DWgfrjcHinjerNYxQmQx1VM76eUsPPKZa5zWV8KksVkBF/DaHSADCwil2J5Uq2ctA==" crossorigin="anonymous"></script>
@@ -23,25 +24,40 @@
 
       <main>
         <div v-if="visible" v-for="(film, index) in films" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
+
           <div class="informations">
+
             <div class="title spacing">
               <strong>Titolo: </strong>
-              {{ film.title }}
+              {{ film.title }} {{ film.name }}
             </div>
+
             <div class="original-title spacing">
               <strong>Titolo originale: </strong>
-              {{ film.original_title }}
+              {{ film.original_title }} {{ film.original_name }}
             </div>
+
+            <div class="language">
+              <strong>Lingua originale: </strong>
+              <img v-if="film.original_language == 'en'" src="img/america.png" alt="">
+              <img v-else-if="film.original_language == 'it'" src="img/italia2.jpg" alt="">
+              <img v-else-if="film.original_language == 'de'" src="img/germania.jpg" alt="">
+              <span v-else="">{{ film.original_language.toUpperCase() }}</span>
+              <span v-if="film.original_language == ''">N/A</span>
+            </div>
+
             <div class="vote spacing">
               <strong>Voto: </strong>
               <i v-for="item in Math.floor(vote[index] / 2)" class="fas fa-star"></i>
               <i v-if="vote[index] % 2 == 1" class="fas fa-star-half-alt"></i>
               <i v-for="item in (Math.floor(5 - (vote[index]) / 2))" class="far fa-star"></i>
             </div>
+
             <div class="overview spacing">
               <strong>Overview: </strong>
               {{ film.overview }}
             </div>
+
           </div>
         </div>
       </main>
