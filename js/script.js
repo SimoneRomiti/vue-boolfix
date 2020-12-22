@@ -94,7 +94,6 @@ var app = new Vue(
             // FUNZIONE PER CREAZIONE ARRAY VOTI
             self.vote = self.getArrayVote(self.popularSearch);
             self.voteOther = self.getArrayVote(self.restSearch);
-            console.log("QUESTO", self.vote);
 
             self.actors = [];
             const creditsInitialPath = 'https://api.themoviedb.org/3/movie/';
@@ -107,7 +106,7 @@ var app = new Vue(
             // } else{
             //   var x = 1;
             // }
-            // CICLO PER EVENTUALE MODIFICA
+            // CICLO PER EVENTUALE MODIFICA SE INSERIRE CAST ANCHE SU RESTSEARCH
             for(var i = 0; i < 1; i++){
               if(self.films[i].title != null){
 
