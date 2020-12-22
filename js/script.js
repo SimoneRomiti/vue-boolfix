@@ -75,15 +75,15 @@ var app = new Vue(
               i++;
             }
 
-            // CREAZIONE TOP 3
-            var i = 0;
-            while(i < 3 && self.films[i] != null){
-              self.popularSearch.push(self.films[i]);
+            // CREAZIONE TOP
+            // var i = 0;
+            // while(i < 3 && self.films[i] != null){
+              self.popularSearch.push(self.films[0]);
               i++;
-            }
+            // }
 
             // CREAZIONE OTHER
-            var i = 3;
+            var i = 1;
             while(i < self.films.length && self.films[i] != null){
               self.restSearch.push(self.films[i]);
               i++;
@@ -101,14 +101,14 @@ var app = new Vue(
             const creditsFinalPath = '/credits';
             const creditsSeriePath = 'https://api.themoviedb.org/3/tv/'
 
-            // CHIAMATE CAST SOLO SU TOP 3
-            if(self.films.length < 3){
-              var x = self.films.length;
-            } else{
-              var x = 3;
-            }
-
-            for(var i = 0; i < x; i++){
+            // CHIAMATE CAST SOLO SU TOP
+            // if(self.films.length < 1){
+            //   var x = self.films.length;
+            // } else{
+            //   var x = 1;
+            // }
+            // CICLO PER EVENTUALE MODIFICA
+            for(var i = 0; i < 1; i++){
               if(self.films[i].title != null){
 
                 axios

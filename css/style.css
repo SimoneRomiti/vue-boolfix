@@ -43,21 +43,22 @@ header button:hover{
 
 main{
   margin-top: 15vh;
-  padding: 30px 80px;
+  padding: 0 80px;
 }
 
 .popular-film{
   text-align: center;
   color: white;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .popular{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
+
 .movie-poster{
   margin: 10px;
   height: 330px;
@@ -66,10 +67,18 @@ main{
   background-size: cover;
   border-radius: 5px;
 }
+/* .movie-poster-big{
+  margin: 10px;
+  height: 396px;
+  width: 264px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 5px;
+} */
 
 .informations{
-  height: 330px;
-  width: 220px;
+  height: 100%;
+  width: 100%;
   padding: 15px;
   background: rgba(0, 0, 0, 0.7);
   border: 1px solid white;
@@ -133,6 +142,6 @@ main{
 /* FINE MODIFICA SCROLLBAR */
 
 
-.movie-poster .spacing{
+.spacing{
   margin: 5px 0;
 }
