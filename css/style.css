@@ -44,9 +44,19 @@ header button:hover{
 main{
   margin-top: 15vh;
   padding: 30px 80px;
+}
+
+.popular-film{
+  text-align: center;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.popular{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 30px;
 }
 .movie-poster{
   margin: 10px;
