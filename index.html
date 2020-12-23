@@ -74,10 +74,12 @@
               </span>
             </div>
 
-            <!-- <div class="genres spacing">
+            <div class="genres spacing">
               <strong>Generi: </strong>
-              <span v-for="genre in arrayFilmGenre[index]">{{ genre }} <br></span>
-            </div> -->
+              <span v-for="(genre, i) in films[index].genres">
+                {{ genre }}<span v-if="i < films[index].genres.length - 1">, </span>
+              </span>
+            </div>
 
             <div class="overview spacing">
               <strong>Overview: </strong>
@@ -132,10 +134,12 @@
               </span>
             </div>
 
-            <!-- <div class="genres spacing">
+            <div class="genres spacing">
               <strong>Generi: </strong>
-              <span v-for="genre in arrayFilmGenre[index]">{{ genre }} <br></span>
-            </div> -->
+              <span v-for="(genre, i) in films[index + 3].genres">
+                {{ genre }}<span v-if="i < films[index + 3].genres.length - 1">, </span>
+              </span>
+            </div>
 
             <div class="overview spacing">
               <strong>Overview: </strong>

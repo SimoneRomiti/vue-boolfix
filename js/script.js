@@ -151,6 +151,58 @@ var app = new Vue(
               self.$forceUpdate();
             })
 
+            // GENERI
+            let promisesTwo = [];
+            const getFilmGenrePath = axios.get('https://api.themoviedb.org/3/genre/movie/list', {
+              params: {
+                api_key: '00d4d16d41869351335359c44741a330'
+              }
+            })
+            const getSerieGenrePath = axios.get('https://api.themoviedb.org/3/genre/tv/list', {
+              params: {
+                api_key: '00d4d16d41869351335359c44741a330'
+              }
+            })
+
+            Promise.all([getFilmGenrePath, getSerieGenrePath])
+            .then((responses) => {
+              var array = [];
+              for(var i = 0; i < self.films.length; i++){
+                if(self.films[i].title != null){
+                  array = [];
+                  for( var k = 0; k < responses[0].data.genres.length; k++){
+                    for(var j = 0; j < self.films[i].genre_ids.length; j++){
+                      if(self.films[i].genre_ids[j] == responses[0].data.genres[k].id){
+                        array.push(responses[0].data.genres[k].name);
+
+                      }
+                    }
+
+                  }
+                  self.films[i] = {
+                    ...self.films[i],
+                    genres: array
+                  }
+
+                } else {
+                  array = [];
+                  for( var k = 0; k < responses[1].data.genres.length; k++){
+                    for(var j = 0; j < self.films[i].genre_ids.length; j++){
+                      if(self.films[i].genre_ids[j] == responses[1].data.genres[k].id){
+                        array.push(responses[1].data.genres[k].name);
+
+                      }
+                    }
+                  }
+                  self.films[i] = {
+                    ...self.films[i],
+                    genres: array
+                  }
+                }
+              }
+              console.log("NUOVO 2", self.films);
+              self.$forceUpdate();
+            })
           })
         }
       },
