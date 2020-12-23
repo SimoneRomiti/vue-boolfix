@@ -29,7 +29,6 @@ var app = new Vue(
           self.visible = false;
           self.hide = true;
         } else{
-          self.visible = true;
 
           // GET PER RICERCA SU FILM
           let getOne = axios
@@ -92,6 +91,7 @@ var app = new Vue(
             }
 
             console.log("films", self.films);
+            self.visible = true;
 
             // FUNZIONE PER CREAZIONE ARRAY VOTI
             self.vote = self.getArrayVote(self.popularSearch);
