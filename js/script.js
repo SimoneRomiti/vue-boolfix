@@ -7,9 +7,11 @@ var app = new Vue(
       actors: [],
       filmActors: [],
       searchedString: "",
+      resultFor: "",
       notAvailableImage: "img/image-not-available.png",
       initialPath: "https://image.tmdb.org/t/p/w220_and_h330_face",
       visible: true,
+      show: false,
       hide: true,
       vote: [],
       voteOther: [],
@@ -21,7 +23,7 @@ var app = new Vue(
     methods: {
       searchFilm: function(){
         var self = this;
-
+        self.resultFor = self.searchedString;
         // IF SEARCHEDSTRING E' VUOTO ALLORA NON FA NESSUNA CHIAMATA AL SERVER METTE VISIBLE = FALSE E QUINI CANCELLA TUTTI I MOVIE-POSTER PRESENTI
         if(self.searchedString == ""){
           self.visible = false;
@@ -61,7 +63,7 @@ var app = new Vue(
 
             // CONCATENAZIONE IN UNICO ARRAY DEI RISULTATI PER FILM E SERIE
             self.all =
-            response[0].data.results          .concat(response[1].data.results);
+            response[0].data.results.concat(response[1].data.results);
 
             // ORDINAMENTO FILM E SERIE IN BASE ALLA POPOLARITA'
             self.all.sort(function(a, b){
@@ -76,14 +78,14 @@ var app = new Vue(
             }
 
             // CREAZIONE TOP
-            // var i = 0;
-            // while(i < 3 && self.films[i] != null){
-              self.popularSearch.push(self.films[0]);
+            var i = 0;
+            while(i < 3 && self.films[i] != null){
+              self.popularSearch.push(self.films[i]);
               i++;
-            // }
+            }
 
             // CREAZIONE OTHER
-            var i = 1;
+            var i = 3;
             while(i < self.films.length && self.films[i] != null){
               self.restSearch.push(self.films[i]);
               i++;
@@ -100,64 +102,112 @@ var app = new Vue(
             const creditsFinalPath = '/credits';
             const creditsSeriePath = 'https://api.themoviedb.org/3/tv/'
 
-            // CHIAMATE CAST SOLO SU TOP
-            // if(self.films.length < 1){
-            //   var x = self.films.length;
-            // } else{
-            //   var x = 1;
-            // }
-            // CICLO PER EVENTUALE MODIFICA SE INSERIRE CAST ANCHE SU RESTSEARCH
-            for(var i = 0; i < 1; i++){
+            let promises = [];
+            for(var i = 0; i < self.films.length; i++){
               if(self.films[i].title != null){
-
-                axios
-                .get(creditsInitialPath + self.films[i].id + creditsFinalPath,
-                {
-                  params: {
-                    api_key: "00d4d16d41869351335359c44741a330",
-                    language: "it-IT",
-                  }
-                })
-
-                .then((response) => {
-                  self.filmActors = [];
-                  for(var k = 0; k < 5; k++){
-                    if(response.data.cast[k] != null && response.data.cast[k] != ""){
-                      self.filmActors.push(response.data.cast[k].name);
+                promises.push(axios.get(creditsInitialPath + self.films[i].id + creditsFinalPath,
+                  {
+                    params: {
+                      api_key: "00d4d16d41869351335359c44741a330",
+                      language: "it-IT",
                     }
                   }
-
-                  self.actors.push(self.filmActors);
-                  console.log(self.actors);
-
-                  self.hide = false;
-                })
-
-              } else {
-                axios
-                .get(creditsSeriePath + self.films[i].id + creditsFinalPath,
-                {
-                  params: {
-                    api_key: "00d4d16d41869351335359c44741a330",
-                    language: "it-IT",
-                  }
-                })
-
-                .then((response) => {
-                  self.filmActors = [];
-                  for(var k = 0; k < 5; k++){
-                    if(response.data.cast[k] != null && response.data.cast[k] != ""){
-                      self.filmActors.push(response.data.cast[k].name);
+                ));
+              } else{
+                promises.push(axios.get(creditsSeriePath + self.films[i].id + creditsFinalPath,
+                  {
+                    params: {
+                      api_key: "00d4d16d41869351335359c44741a330",
+                      language: "it-IT",
                     }
                   }
-
-                  self.actors.push(self.filmActors);
-                  console.log(self.actors);
-
-                  self.hide = false;
-                })
+                ));
               }
             }
+
+            Promise.all(promises)
+            .then((responses) => {
+
+              console.log(self.actors);
+              for(var i = 0; i < self.films.length; i++){
+                var arrayActor = [];
+                for(var k = 0; k < 5; k++){
+                  if(responses[i].data.cast[k] != null && responses[i].data.cast[k] != ""){
+                    arrayActor.push(responses[i].data.cast[k].name);
+
+                    self.films[i] = {
+                      ...self.films[i],
+                      cast: arrayActor
+                    };
+                  }
+
+                }
+              }
+              console.log("NUOVO", self.films);
+              self.hide = false;
+              self.$forceUpdate();
+            })
+
+            // var j = 0;
+            // for(var i = 0; i < self.films.length; i++){
+            //   if(self.films[i].title != null){
+            //
+            //     axios
+            //     .get(creditsInitialPath + self.films[i].id + creditsFinalPath,
+            //     {
+            //       params: {
+            //         api_key: "00d4d16d41869351335359c44741a330",
+            //         language: "it-IT",
+            //       }
+            //     })
+            //
+            //     .then((response) => {
+            //        var filmActors = [];
+            //       for(var k = 0; k < 5; k++){
+            //         if(response.data.cast[k] != null && response.data.cast[k] != ""){
+            //           filmActors.push(response.data.cast[k].name);
+            //         }
+            //       }
+            //
+            //       self.actors[j] = filmActors;
+            //       console.log(j, i);
+            //       console.log(self.actors[j]);
+            //       j++;
+            //
+            //       self.hide = false;
+            //       self.$forceUpdate();
+            //     });
+            //
+            //
+            //   } else {
+            //     axios
+            //     .get(creditsSeriePath + self.films[i].id + creditsFinalPath,
+            //     {
+            //       params: {
+            //         api_key: "00d4d16d41869351335359c44741a330",
+            //         language: "it-IT",
+            //       }
+            //     })
+            //
+            //     .then((response) => {
+            //       var filmActors = [];
+            //       for(var k = 0; k < 5; k++){
+            //         if(response.data.cast[k] != null && response.data.cast[k] != ""){
+            //           filmActors.push(response.data.cast[k].name);
+            //         }
+            //       }
+            //
+            //       self.actors[j] = filmActors;
+            //       console.log(j, i);
+            //       console.log(self.actors[j])
+            //       j++;
+            //
+            //
+            //       self.hide = false;
+            //       self.$forceUpdate();
+            //     })
+            //   }
+            // }
           })
         }
       },
