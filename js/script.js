@@ -77,7 +77,7 @@ var app = new Vue(
               i++;
             }
 
-            // CREAZIONE TOP
+            // CREAZIONE TOP 3
             var i = 0;
             while(i < 3 && self.films[i] != null){
               self.popularSearch.push(self.films[i]);
@@ -97,11 +97,14 @@ var app = new Vue(
             self.vote = self.getArrayVote(self.popularSearch);
             self.voteOther = self.getArrayVote(self.restSearch);
 
-            self.actors = [];
+
+          // INSERIMENTO CAST COME NUOVO OGGETTO DI FILMS[i]
+            // SVUOTAMENTO ARRAY DI APPOGGIO DOPO UNA RICERCA E SALVATAGGIO VARIABILI PER CHIAMATA GET
             const creditsInitialPath = 'https://api.themoviedb.org/3/movie/';
             const creditsFinalPath = '/credits';
             const creditsSeriePath = 'https://api.themoviedb.org/3/tv/'
 
+            // CREAZIONE DI ARRAY CONTENENTE TUTTI I GET PER RICHIAMARE IL CAST DI OGNI FILM RICERCATO, SIA PER I FILM CHE PER LE SERIE
             let promises = [];
             for(var i = 0; i < self.films.length; i++){
               if(self.films[i].title != null){
@@ -124,11 +127,11 @@ var app = new Vue(
                 ));
               }
             }
-
+            // PROMISE ALL DELL'ARRAY CONTENENTE I GET E THEN CHE HA COME RESPONSES UN ARRAY CHE CONTIENE IN RESPONSES[i] LE INFORMAZIONI (COMPRESO IL CAST) DEL FILM CHE SI TROVA IN POSIZIONE I
             Promise.all(promises)
             .then((responses) => {
 
-              console.log(self.actors);
+              // SCORRO TUTTI I FILM RICERCATI E SELEZIONO I PRIMI 5 ELEMENTI PRESENTI NELLA CHIAVE CAST DI RESPONSES[i] E PUSHO TUTTO IN ARRAYACTOR CHE SARA' INSERITO COME NUOVO OGGETTO DI FILMS[i]
               for(var i = 0; i < self.films.length; i++){
                 var arrayActor = [];
                 for(var k = 0; k < 5; k++){
@@ -148,66 +151,6 @@ var app = new Vue(
               self.$forceUpdate();
             })
 
-            // var j = 0;
-            // for(var i = 0; i < self.films.length; i++){
-            //   if(self.films[i].title != null){
-            //
-            //     axios
-            //     .get(creditsInitialPath + self.films[i].id + creditsFinalPath,
-            //     {
-            //       params: {
-            //         api_key: "00d4d16d41869351335359c44741a330",
-            //         language: "it-IT",
-            //       }
-            //     })
-            //
-            //     .then((response) => {
-            //        var filmActors = [];
-            //       for(var k = 0; k < 5; k++){
-            //         if(response.data.cast[k] != null && response.data.cast[k] != ""){
-            //           filmActors.push(response.data.cast[k].name);
-            //         }
-            //       }
-            //
-            //       self.actors[j] = filmActors;
-            //       console.log(j, i);
-            //       console.log(self.actors[j]);
-            //       j++;
-            //
-            //       self.hide = false;
-            //       self.$forceUpdate();
-            //     });
-            //
-            //
-            //   } else {
-            //     axios
-            //     .get(creditsSeriePath + self.films[i].id + creditsFinalPath,
-            //     {
-            //       params: {
-            //         api_key: "00d4d16d41869351335359c44741a330",
-            //         language: "it-IT",
-            //       }
-            //     })
-            //
-            //     .then((response) => {
-            //       var filmActors = [];
-            //       for(var k = 0; k < 5; k++){
-            //         if(response.data.cast[k] != null && response.data.cast[k] != ""){
-            //           filmActors.push(response.data.cast[k].name);
-            //         }
-            //       }
-            //
-            //       self.actors[j] = filmActors;
-            //       console.log(j, i);
-            //       console.log(self.actors[j])
-            //       j++;
-            //
-            //
-            //       self.hide = false;
-            //       self.$forceUpdate();
-            //     })
-            //   }
-            // }
           })
         }
       },
