@@ -41,8 +41,15 @@ header button:hover{
   outline: none;
 }
 
+header .selection{
+  text-align: center;
+}
+p{
+  color: white;
+}
+
 main{
-  margin-top: 15vh;
+  margin-top: 20vh;
   padding: 0 80px;
 }
 
@@ -67,14 +74,6 @@ main{
   background-size: cover;
   border-radius: 5px;
 }
-/* .movie-poster-big{
-  margin: 10px;
-  height: 396px;
-  width: 264px;
-  background-position: center;
-  background-size: cover;
-  border-radius: 5px;
-} */
 
 .informations{
   height: 100%;

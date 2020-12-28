@@ -4,8 +4,8 @@ var app = new Vue(
     data: {
       films: [],
       all: [],
-      actors: [],
-      filmActors: [],
+      arrayGenres: [],
+      totalGenres: [],
       searchedString: "",
       resultFor: "",
       notAvailableImage: "img/image-not-available.png",
@@ -17,18 +17,23 @@ var app = new Vue(
       voteOther: [],
       language: [],
       popularSearch: [],
-      restSearch: []
+      restSearch: [],
+      selected: "ALL"
     },
 
     methods: {
       searchFilm: function(){
         var self = this;
+        self.selected = "ALL";
         self.resultFor = self.searchedString;
         // IF SEARCHEDSTRING E' VUOTO ALLORA NON FA NESSUNA CHIAMATA AL SERVER METTE VISIBLE = FALSE E QUINI CANCELLA TUTTI I MOVIE-POSTER PRESENTI
         if(self.searchedString == ""){
           self.visible = false;
           self.hide = true;
+          self.show = false;
         } else{
+          self.show = true;
+          self.totalGenres = [];
 
           // GET PER RICERCA SU FILM
           let getOne = axios
@@ -166,14 +171,14 @@ var app = new Vue(
 
             Promise.all([getFilmGenrePath, getSerieGenrePath])
             .then((responses) => {
-              var array = [];
+
               for(var i = 0; i < self.films.length; i++){
                 if(self.films[i].title != null){
-                  array = [];
+                  self.arrayGenres = [];
                   for( var k = 0; k < responses[0].data.genres.length; k++){
                     for(var j = 0; j < self.films[i].genre_ids.length; j++){
                       if(self.films[i].genre_ids[j] == responses[0].data.genres[k].id){
-                        array.push(responses[0].data.genres[k].name);
+                        self.arrayGenres.push(responses[0].data.genres[k].name);
 
                       }
                     }
@@ -181,30 +186,62 @@ var app = new Vue(
                   }
                   self.films[i] = {
                     ...self.films[i],
-                    genres: array
+                    genres: self.arrayGenres
+                  }
+
+                  for(var x = 0; x < self.arrayGenres.length; x++){
+                    if(!self.totalGenres.includes(self.arrayGenres[x] )){
+                      self.totalGenres.push(self.arrayGenres[x]);
+                    }
                   }
 
                 } else {
-                  array = [];
+                  self.arrayGenres = [];
                   for( var k = 0; k < responses[1].data.genres.length; k++){
                     for(var j = 0; j < self.films[i].genre_ids.length; j++){
                       if(self.films[i].genre_ids[j] == responses[1].data.genres[k].id){
-                        array.push(responses[1].data.genres[k].name);
+                        self.arrayGenres.push(responses[1].data.genres[k].name);
 
                       }
                     }
                   }
                   self.films[i] = {
                     ...self.films[i],
-                    genres: array
+                    genres: self.arrayGenres
                   }
+
+                  for(var x = 0; x < self.arrayGenres.length; x++){
+                    if(!self.totalGenres.includes(self.arrayGenres[x] )){
+                      self.totalGenres.push(self.arrayGenres[x]);
+                    }
+                  }
+
+
                 }
               }
+              // if(self.selected == "ALL"){
+              //   self.filteredFilms = self.films.filter(
+              //     (element, index) => {
+              //       return true;
+              //     }
+              //   )
+              // } else {
+              //   self.filteredFilms = self.films.filter(
+              //     (element, index) => {
+              //       return (element.genres.includes(self.selected));
+              //     }
+              //   )
+              // }
+              console.log("total", self.totalGenres);
               console.log("NUOVO 2", self.films);
+              // console.log("filter", self.filteredFilms);
               self.$forceUpdate();
             })
+
+
           })
         }
+
       },
 
       searchFilmEnterKey: function(){
