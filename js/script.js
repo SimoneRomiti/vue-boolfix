@@ -11,7 +11,6 @@ var app = new Vue(
       notAvailableImage: "img/image-not-available.png",
       initialPath: "https://image.tmdb.org/t/p/w220_and_h330_face",
       visible: true,
-      show: false,
       hide: true,
       vote: [],
       voteOther: [],
@@ -25,14 +24,13 @@ var app = new Vue(
       searchFilm: function(){
         var self = this;
         self.selected = "ALL";
+        self.visible = false;
         self.resultFor = self.searchedString;
         // IF SEARCHEDSTRING E' VUOTO ALLORA NON FA NESSUNA CHIAMATA AL SERVER METTE VISIBLE = FALSE E QUINI CANCELLA TUTTI I MOVIE-POSTER PRESENTI
         if(self.searchedString == ""){
           self.visible = false;
           self.hide = true;
-          self.show = false;
         } else{
-          self.show = true;
           self.totalGenres = [];
 
           // GET PER RICERCA SU FILM
@@ -45,7 +43,6 @@ var app = new Vue(
               query: self.searchedString
             }
           })
-
           // GET PER RICERCA SU SERIE
           let getTwo = axios
           .get('https://api.themoviedb.org/3/search/tv',
@@ -56,7 +53,6 @@ var app = new Vue(
               query: self.searchedString
             }
           })
-
           // CHIAMATA SIMULTANEA PER RICERCA FILM E SERIE TV
           Promise.all([getOne, getTwo])
           .then(function(response){
@@ -73,6 +69,7 @@ var app = new Vue(
             self.all.sort(function(a, b){
               return b.popularity - a.popularity;
             })
+
 
             // RESTITUISCE AL MASSIMO I PRIMI 20 RISULTATI
             var i = 0;
@@ -95,7 +92,6 @@ var app = new Vue(
               i++;
             }
 
-            console.log("films", self.films);
             self.visible = true;
 
             // FUNZIONE PER CREAZIONE ARRAY VOTI
@@ -103,145 +99,15 @@ var app = new Vue(
             self.voteOther = self.getArrayVote(self.restSearch);
 
 
-          // INSERIMENTO CAST COME NUOVO OGGETTO DI FILMS[i]
-            // SVUOTAMENTO ARRAY DI APPOGGIO DOPO UNA RICERCA E SALVATAGGIO VARIABILI PER CHIAMATA GET
-            const creditsInitialPath = 'https://api.themoviedb.org/3/movie/';
-            const creditsFinalPath = '/credits';
-            const creditsSeriePath = 'https://api.themoviedb.org/3/tv/'
+            // FUNZIONE PER INSERIMENTO CAST COME NUOVO OGGETTO DI FILMS[i]
+            self.insertCast();
 
-            // CREAZIONE DI ARRAY CONTENENTE TUTTI I GET PER RICHIAMARE IL CAST DI OGNI FILM RICERCATO, SIA PER I FILM CHE PER LE SERIE
-            let promises = [];
-            for(var i = 0; i < self.films.length; i++){
-              if(self.films[i].title != null){
-                promises.push(axios.get(creditsInitialPath + self.films[i].id + creditsFinalPath,
-                  {
-                    params: {
-                      api_key: "00d4d16d41869351335359c44741a330",
-                      language: "it-IT",
-                    }
-                  }
-                ));
-              } else{
-                promises.push(axios.get(creditsSeriePath + self.films[i].id + creditsFinalPath,
-                  {
-                    params: {
-                      api_key: "00d4d16d41869351335359c44741a330",
-                      language: "it-IT",
-                    }
-                  }
-                ));
-              }
-            }
-            // PROMISE ALL DELL'ARRAY CONTENENTE I GET E THEN CHE HA COME RESPONSES UN ARRAY CHE CONTIENE IN RESPONSES[i] LE INFORMAZIONI (COMPRESO IL CAST) DEL FILM CHE SI TROVA IN POSIZIONE I
-            Promise.all(promises)
-            .then((responses) => {
-
-              // SCORRO TUTTI I FILM RICERCATI E SELEZIONO I PRIMI 5 ELEMENTI PRESENTI NELLA CHIAVE CAST DI RESPONSES[i] E PUSHO TUTTO IN ARRAYACTOR CHE SARA' INSERITO COME NUOVO OGGETTO DI FILMS[i]
-              for(var i = 0; i < self.films.length; i++){
-                var arrayActor = [];
-                for(var k = 0; k < 5; k++){
-                  if(responses[i].data.cast[k] != null && responses[i].data.cast[k] != ""){
-                    arrayActor.push(responses[i].data.cast[k].name);
-
-                    self.films[i] = {
-                      ...self.films[i],
-                      cast: arrayActor
-                    };
-                  }
-
-                }
-              }
-              console.log("NUOVO", self.films);
-              self.hide = false;
-              self.$forceUpdate();
-            })
-
-            // GENERI
-            let promisesTwo = [];
-            const getFilmGenrePath = axios.get('https://api.themoviedb.org/3/genre/movie/list', {
-              params: {
-                api_key: '00d4d16d41869351335359c44741a330'
-              }
-            })
-            const getSerieGenrePath = axios.get('https://api.themoviedb.org/3/genre/tv/list', {
-              params: {
-                api_key: '00d4d16d41869351335359c44741a330'
-              }
-            })
-
-            Promise.all([getFilmGenrePath, getSerieGenrePath])
-            .then((responses) => {
-
-              for(var i = 0; i < self.films.length; i++){
-                if(self.films[i].title != null){
-                  self.arrayGenres = [];
-                  for( var k = 0; k < responses[0].data.genres.length; k++){
-                    for(var j = 0; j < self.films[i].genre_ids.length; j++){
-                      if(self.films[i].genre_ids[j] == responses[0].data.genres[k].id){
-                        self.arrayGenres.push(responses[0].data.genres[k].name);
-
-                      }
-                    }
-
-                  }
-                  self.films[i] = {
-                    ...self.films[i],
-                    genres: self.arrayGenres
-                  }
-
-                  for(var x = 0; x < self.arrayGenres.length; x++){
-                    if(!self.totalGenres.includes(self.arrayGenres[x] )){
-                      self.totalGenres.push(self.arrayGenres[x]);
-                    }
-                  }
-
-                } else {
-                  self.arrayGenres = [];
-                  for( var k = 0; k < responses[1].data.genres.length; k++){
-                    for(var j = 0; j < self.films[i].genre_ids.length; j++){
-                      if(self.films[i].genre_ids[j] == responses[1].data.genres[k].id){
-                        self.arrayGenres.push(responses[1].data.genres[k].name);
-
-                      }
-                    }
-                  }
-                  self.films[i] = {
-                    ...self.films[i],
-                    genres: self.arrayGenres
-                  }
-
-                  for(var x = 0; x < self.arrayGenres.length; x++){
-                    if(!self.totalGenres.includes(self.arrayGenres[x] )){
-                      self.totalGenres.push(self.arrayGenres[x]);
-                    }
-                  }
-
-
-                }
-              }
-              // if(self.selected == "ALL"){
-              //   self.filteredFilms = self.films.filter(
-              //     (element, index) => {
-              //       return true;
-              //     }
-              //   )
-              // } else {
-              //   self.filteredFilms = self.films.filter(
-              //     (element, index) => {
-              //       return (element.genres.includes(self.selected));
-              //     }
-              //   )
-              // }
-              console.log("total", self.totalGenres);
-              console.log("NUOVO 2", self.films);
-              // console.log("filter", self.filteredFilms);
-              self.$forceUpdate();
-            })
-
-
+            // FUNZIONE PER INSERIMENTO GENERI SENZA DUPLICATI DEI FILM RICERCATI IN NUOVO ARRAY
+            self.getGenres();
+            self.hide = false;
+            console.log("films", self.films);
           })
         }
-
       },
 
       searchFilmEnterKey: function(){
@@ -257,6 +123,119 @@ var app = new Vue(
         }
         return arrayVote;
       },
+
+      insertCast: function(){
+        var self = this;
+        // SALVATAGGIO VARIABILI PER CHIAMATA GET
+        const creditsInitialPath = 'https://api.themoviedb.org/3/movie/';
+        const creditsFinalPath = '/credits';
+        const creditsSeriePath = 'https://api.themoviedb.org/3/tv/'
+
+        // CREAZIONE DI ARRAY CONTENENTE TUTTI I GET PER RICHIAMARE IL CAST DI OGNI FILM RICERCATO, SIA PER I FILM CHE PER LE SERIE
+        let promises = [];
+        for(var i = 0; i < self.films.length; i++){
+          if(self.films[i].title != null){
+            promises.push(axios.get(creditsInitialPath + self.films[i].id + creditsFinalPath,
+              {
+                params: {
+                  api_key: "00d4d16d41869351335359c44741a330",
+                  language: "it-IT",
+                }
+              }
+            ));
+          } else{
+            promises.push(axios.get(creditsSeriePath + self.films[i].id + creditsFinalPath,
+              {
+                params: {
+                  api_key: "00d4d16d41869351335359c44741a330",
+                  language: "it-IT",
+                }
+              }
+            ));
+          }
+        }
+        // PROMISE ALL DELL'ARRAY CONTENENTE I GET E THEN CHE HA COME RESPONSES UN ARRAY CHE CONTIENE IN RESPONSES[i] I CREDITS (COMPRESO IL CAST) DEL FILM CHE SI TROVA IN POSIZIONE I
+        Promise.all(promises)
+        .then((responses) => {
+
+          // SCORRO TUTTI I FILM RICERCATI E SELEZIONO I PRIMI 5 ELEMENTI PRESENTI NELLA CHIAVE CAST DI RESPONSES[i] E PUSHO TUTTO IN ARRAYACTOR CHE SARA' INSERITO COME NUOVO OGGETTO DI FILMS[i]
+          for(var i = 0; i < self.films.length; i++){
+            var arrayActor = [];
+            for(var k = 0; k < 5; k++){
+              if(responses[i].data.cast[k] != null && responses[i].data.cast[k] != ""){
+                arrayActor.push(responses[i].data.cast[k].name);
+
+                self.films[i] = {
+                  ...self.films[i],
+                  cast: arrayActor
+                };
+              }
+            }
+          }
+          self.$forceUpdate();
+        })
+      },
+
+      getGenres: function(){
+        // GENERI
+        var self = this;
+        const getFilmGenrePath = axios.get('https://api.themoviedb.org/3/genre/movie/list', {
+          params: {
+            api_key: '00d4d16d41869351335359c44741a330'
+          }
+        })
+        const getSerieGenrePath = axios.get('https://api.themoviedb.org/3/genre/tv/list', {
+          params: {
+            api_key: '00d4d16d41869351335359c44741a330'
+          }
+        })
+        // PROMISE ALL DI ARRAY CON 2 ELEMENTI IL PRIMO CONTIENE IL GET PER I GENERI DEI FILM E IL SECONDO IL GET PER I GENERI DELLE SERIE
+        Promise.all([getFilmGenrePath, getSerieGenrePath])
+        .then((responses) => {
+
+          // CICLO PER TUTTI I FILM RICERCATI
+          for(var i = 0; i < self.films.length; i++){
+            // IF FILM
+            if(self.films[i].title != null){
+              // SVUOTO L'ARRAY CHE ANDRA' A CONTENERE I GENERI DI FILMS[i]
+              self.arrayGenres = [];
+              self.insertGenres(responses[0], i);
+
+              // ELSE SERIE
+            } else {
+              self.arrayGenres = [];
+              self.insertGenres(responses[1], i);
+            }
+          }
+          self.$forceUpdate();
+        })
+      },
+
+      insertGenres: function(response, i){
+        var self = this;
+        // CICLO PER TUTTI I GENERI DEI FILM PRESENTI NELL'API
+        for(var k = 0; k < response.data.genres.length; k++){
+          // CICLO PER TUTTI GLI ID GENERI CHE HA FILMS[i]
+          for(var j = 0; j < self.films[i].genre_ids.length; j++){
+            // CONFRONTO TRA ID PRESENTI IN FILMS[i] E ID DI TUTTI I GENERI, SE UGUALI PUSH IN ARRAY IL GENERE CORRISPONDENTE ALL'ID
+            if(self.films[i].genre_ids[j] == response.data.genres[k].id){
+              self.arrayGenres.push(response.data.genres[k].name);
+            }
+          }
+        }
+        // AGGIUNGO IN FILMS[i] L'OGGETTO GENRES CONTENENTE L'ARRAY IN CUI HO PUSHATO DOPO IL CONFRONTO
+        self.films[i] = {
+          ...self.films[i],
+          genres: self.arrayGenres
+        }
+
+        // CREAZIONE DI ARRAY CONTENENTE TUTTI I GENERI PRESENTI NEI FILM RICERCATI SENZA GENERI DUPLICATI
+        for(var x = 0; x < self.arrayGenres.length; x++){
+          if(!self.totalGenres.includes(self.arrayGenres[x] )){
+            self.totalGenres.push(self.arrayGenres[x]);
+          }
+        }
+      }
     }
   }
 );

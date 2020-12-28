@@ -21,7 +21,7 @@
           <button @click="searchFilm()" type="button" name="button"><strong>SEARCH</strong></button>
         </div>
 
-        <div v-if="show" class="selection">
+        <div v-if="hide == false" class="selection">
           <select v-model="selected" class="" name="">
             <option value="ALL">ALL</option>
             <option v-for="element in totalGenres" :value="element">{{element}}</option>
@@ -31,15 +31,15 @@
       </header>
       <main>
 
-      <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL'">
+      <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL' && visible">
         TOP 3 films / SERIES FOR "{{resultFor.toUpperCase()}}"
       </h1>
 
-      <h1 class="popular-film" v-else-if="hide == false && films.length <= 3 && selected == 'ALL'">
+      <h1 class="popular-film" v-else-if="hide == false && films.length <= 3 && selected == 'ALL' && visible">
         RESULTS FOR "{{resultFor.toUpperCase()}}"
       </h1>
 
-      <h1 class="popular-film" v-if="hide == false && films.length == 0 && selected == 'ALL'">
+      <h1 class="popular-film" v-if="hide == false && films.length == 0 && selected == 'ALL' && visible">
         No results
       </h1>
 
@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL'">
+      <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL' && visible">
         OTHER films / SERIES FOR "{{resultFor.toUpperCase()}}"
       </h1>
 
