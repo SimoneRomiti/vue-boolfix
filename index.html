@@ -13,6 +13,7 @@
   </head>
   <body>
     <div id="container">
+      <!-- LOGO RICERCA E SELECT -->
       <header>
         <img src="img/netflix.png" alt="">
 
@@ -21,7 +22,7 @@
           <button @click="searchFilm()" type="button" name="button"><strong>SEARCH</strong></button>
         </div>
 
-        <div v-if="hide == false" class="selection">
+        <div v-if="hide == false || homepage" class="selection">
           <select v-model="selected" class="" name="">
             <option value="ALL">ALL</option>
             <option v-for="element in totalGenres" :value="element">{{element}}</option>
@@ -29,137 +30,206 @@
           <p>{{selected}}</p>
         </div>
       </header>
+      <!-- /LOGO RICERCA E SELECT -->
+
       <main>
 
-      <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL' && visible">
-        TOP 3 films / SERIES FOR "{{resultFor.toUpperCase()}}"
-      </h1>
+        <!-- HOMEPAGE -->
+        <h1 class="popular-film" v-if="hide">POPULAR FILMS / SERIES THIS WEEK <span v-if="selected != 'ALL'">(genre: {{selected}})</span></h1>
+        <div class="popular" v-if="homepage">
+          <div v-for="(film, index) in films" v-if="selected == 'ALL' || films[index].genres.includes(selected)" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
 
-      <h1 class="popular-film" v-else-if="hide == false && films.length <= 3 && selected == 'ALL' && visible">
-        RESULTS FOR "{{resultFor.toUpperCase()}}"
-      </h1>
+            <div class="informations">
 
-      <h1 class="popular-film" v-if="hide == false && films.length == 0 && selected == 'ALL' && visible">
-        No results
-      </h1>
+              <div class="title spacing">
+                <strong>Titolo: </strong>
+                {{ film.title }} {{ film.name }}
+              </div>
 
-      <h1 class="popular-film" v-if="selected != 'ALL'">RESULTS FOR "{{resultFor.toUpperCase()}}" GENRE: "{{selected}}"</h1>
+              <div class="original-title spacing">
+                <strong>Titolo originale: </strong>
+                {{ film.original_title }} {{ film.original_name }}
+              </div>
 
-      <div class="popular">
-        <div v-for="(film, index) in popularSearch" v-if="visible && (selected == 'ALL' || films[index].genres.includes(selected))" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
-          <div class="informations">
+               <div class="language">
+                <strong>Lingua originale: </strong>
+                <img v-if="film.original_language == 'en'" src="img/america.png" alt="">
+                <img v-else-if="film.original_language == 'it'" src="img/italia2.jpg" alt="">
+                <img v-else-if="film.original_language == 'de'" src="img/germania.jpg" alt="">
+                <span v-else="">
+                  {{ film.original_language.toUpperCase() }}
+                </span>
+                <span v-if="film.original_language == ''">
+                  N/A
+                </span>
+              </div>
 
-            <div class="title spacing">
-              <strong>Titolo: </strong>
-              {{ film.title }} {{ film.name }}
-            </div>
+              <div class="vote spacing">
+                <strong>Voto: </strong>
+                <i v-for="item in Math.floor(vote[index] / 2)" class="fas fa-star"></i>
+                <i v-if="vote[index] % 2 == 1" class="fas fa-star-half-alt"></i>
+                <i v-for="item in (Math.floor(5 - (vote[index]) / 2))" class="far fa-star"></i>
+              </div>
 
-            <div class="original-title spacing">
-              <strong>Titolo originale: </strong>
-              {{ film.original_title }} {{ film.original_name }}
-            </div>
+              <div class="cast spacing">
+                <strong>Cast: </strong>
+                <span v-for="cast in films[index].cast">
+                  {{ cast }} <br>
+                </span>
+              </div>
 
-            <div class="language">
-              <strong>Lingua originale: </strong>
-              <img v-if="film.original_language == 'en'" src="img/america.png" alt="">
-              <img v-else-if="film.original_language == 'it'" src="img/italia2.jpg" alt="">
-              <img v-else-if="film.original_language == 'de'" src="img/germania.jpg" alt="">
-              <span v-else="">
-                {{ film.original_language.toUpperCase() }}
-              </span>
-              <span v-if="film.original_language == ''">
-                N/A
-              </span>
-            </div>
+              <div class="genres spacing">
+                <strong>Generi: </strong>
+                <span v-for="(genre, i) in films[index].genres">
+                  {{ genre }}<span v-if="i < films[index].genres.length - 1">, </span>
+                </span>
+              </div>
 
-            <div class="vote spacing">
-              <strong>Voto: </strong>
-              <i v-for="item in Math.floor(vote[index] / 2)" class="fas fa-star"></i>
-              <i v-if="vote[index] % 2 == 1" class="fas fa-star-half-alt"></i>
-              <i v-for="item in (Math.floor(5 - (vote[index]) / 2))" class="far fa-star"></i>
-            </div>
-
-            <div class="cast spacing">
-              <strong>Cast: </strong>
-              <span v-for="cast in films[index].cast">
-                {{ cast }} <br>
-              </span>
-            </div>
-
-            <div class="genres spacing">
-              <strong>Generi: </strong>
-              <span v-for="(genre, i) in films[index].genres">
-                {{ genre }}<span v-if="i < films[index].genres.length - 1">, </span>
-              </span>
-            </div>
-
-            <div class="overview spacing">
-              <strong>Overview: </strong>
-              {{ film.overview }}
+              <div class="overview spacing">
+                <strong>Overview: </strong>
+                {{ film.overview }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        <!-- /HOMEPAGE -->
 
-      <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL' && visible">
-        OTHER films / SERIES FOR "{{resultFor.toUpperCase()}}"
-      </h1>
+        <!-- RESEARCH -->
+        <!-- TITOLI -->
+        <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL' && visible">
+          TOP 3 FILMS / SERIES FOR "{{resultFor.toUpperCase()}}"
+        </h1>
 
-      <div class="popular">
-        <div v-if="visible && (selected == 'ALL' || films[index + 3].genres.includes(selected))" v-for="(film, index) in restSearch" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
-          <div class="informations">
+        <h1 class="popular-film" v-else-if="hide == false && films.length <= 3 && selected == 'ALL' && visible">
+          RESULTS FOR "{{resultFor.toUpperCase()}}"
+        </h1>
 
-            <div class="title spacing">
-              <strong>Titolo: </strong>
-              {{ film.title }} {{ film.name }}
-            </div>
+        <h1 class="popular-film" v-if="hide == false && films.length == 0 && selected == 'ALL' && visible">
+          No results
+        </h1>
 
-            <div class="original-title spacing">
-              <strong>Titolo originale: </strong>
-              {{ film.original_title }} {{ film.original_name }}
-            </div>
+        <h1 class="popular-film" v-if="selected != 'ALL' && homepage == false">RESULTS FOR "{{resultFor.toUpperCase()}}" GENRE: "{{selected}}"</h1>
+        <!-- /TITOLI -->
+        <!-- POPULAR SEARCH -->
+        <div class="popular" v-if="homepage == false">
+          <div v-for="(film, index) in popularSearch" v-if="visible && (selected == 'ALL' || films[index].genres.includes(selected))" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
+            <div class="informations">
 
-            <div class="language">
-              <strong>Lingua originale: </strong>
-              <img v-if="film.original_language == 'en'" src="img/america.png" alt="">
-              <img v-else-if="film.original_language == 'it'" src="img/italia2.jpg" alt="">
-              <img v-else-if="film.original_language == 'de'" src="img/germania.jpg" alt="">
-              <span v-else="">
-                {{ film.original_language.toUpperCase() }}
-              </span>
-              <span v-if="film.original_language == ''">
-                N/A
-              </span>
-            </div>
+              <div class="title spacing">
+                <strong>Titolo: </strong>
+                {{ film.title }} {{ film.name }}
+              </div>
 
-            <div class="vote spacing">
-              <strong>Voto: </strong>
-              <i v-for="item in Math.floor(voteOther[index] / 2)" class="fas fa-star"></i>
-              <i v-if="voteOther[index] % 2 == 1" class="fas fa-star-half-alt"></i>
-              <i v-for="item in (Math.floor(5 - (voteOther[index]) / 2))" class="far fa-star"></i>
-            </div>
+              <div class="original-title spacing">
+                <strong>Titolo originale: </strong>
+                {{ film.original_title }} {{ film.original_name }}
+              </div>
 
-            <div class="cast spacing">
-              <strong>Cast: </strong>
-              <span v-for="cast in films[index + 3].cast">
-                {{ cast }} <br>
-              </span>
-            </div>
+              <div class="language">
+                <strong>Lingua originale: </strong>
+                <img v-if="film.original_language == 'en'" src="img/america.png" alt="">
+                <img v-else-if="film.original_language == 'it'" src="img/italia2.jpg" alt="">
+                <img v-else-if="film.original_language == 'de'" src="img/germania.jpg" alt="">
+                <span v-else="">
+                  {{ film.original_language.toUpperCase() }}
+                </span>
+                <span v-if="film.original_language == ''">
+                  N/A
+                </span>
+              </div>
 
-            <div class="genres spacing">
-              <strong>Generi: </strong>
-              <span v-for="(genre, i) in films[index + 3].genres">
-                {{ genre }}<span v-if="i < films[index + 3].genres.length - 1">, </span>
-              </span>
-            </div>
+              <div class="vote spacing">
+                <strong>Voto: </strong>
+                <i v-for="item in Math.floor(vote[index] / 2)" class="fas fa-star"></i>
+                <i v-if="vote[index] % 2 == 1" class="fas fa-star-half-alt"></i>
+                <i v-for="item in (Math.floor(5 - (vote[index]) / 2))" class="far fa-star"></i>
+              </div>
 
-            <div class="overview spacing">
-              <strong>Overview: </strong>
-              {{ film.overview }}
+              <div class="cast spacing">
+                <strong>Cast: </strong>
+                <span v-for="cast in films[index].cast">
+                  {{ cast }} <br>
+                </span>
+              </div>
+
+              <div class="genres spacing">
+                <strong>Generi: </strong>
+                <span v-for="(genre, i) in films[index].genres">
+                  {{ genre }}<span v-if="i < films[index].genres.length - 1">, </span>
+                </span>
+              </div>
+
+              <div class="overview spacing">
+                <strong>Overview: </strong>
+                {{ film.overview }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        <!-- /POPULAR SEARCH -->
+
+        <!-- OTHER -->
+        <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL' && visible">
+          OTHER FILMS / SERIES FOR "{{resultFor.toUpperCase()}}"
+        </h1>
+
+        <div class="popular">
+          <div v-if="visible && (selected == 'ALL' || films[index + 3].genres.includes(selected))" v-for="(film, index) in restSearch" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
+            <div class="informations">
+
+              <div class="title spacing">
+                <strong>Titolo: </strong>
+                {{ film.title }} {{ film.name }}
+              </div>
+
+              <div class="original-title spacing">
+                <strong>Titolo originale: </strong>
+                {{ film.original_title }} {{ film.original_name }}
+              </div>
+
+              <div class="language">
+                <strong>Lingua originale: </strong>
+                <img v-if="film.original_language == 'en'" src="img/america.png" alt="">
+                <img v-else-if="film.original_language == 'it'" src="img/italia2.jpg" alt="">
+                <img v-else-if="film.original_language == 'de'" src="img/germania.jpg" alt="">
+                <span v-else="">
+                  {{ film.original_language.toUpperCase() }}
+                </span>
+                <span v-if="film.original_language == ''">
+                  N/A
+                </span>
+              </div>
+
+              <div class="vote spacing">
+                <strong>Voto: </strong>
+                <i v-for="item in Math.floor(voteOther[index] / 2)" class="fas fa-star"></i>
+                <i v-if="voteOther[index] % 2 == 1" class="fas fa-star-half-alt"></i>
+                <i v-for="item in (Math.floor(5 - (voteOther[index]) / 2))" class="far fa-star"></i>
+              </div>
+
+              <div class="cast spacing">
+                <strong>Cast: </strong>
+                <span v-for="cast in films[index + 3].cast">
+                  {{ cast }} <br>
+                </span>
+              </div>
+
+              <div class="genres spacing">
+                <strong>Generi: </strong>
+                <span v-for="(genre, i) in films[index + 3].genres">
+                  {{ genre }}<span v-if="i < films[index + 3].genres.length - 1">, </span>
+                </span>
+              </div>
+
+              <div class="overview spacing">
+                <strong>Overview: </strong>
+                {{ film.overview }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /OTHER -->
+        <!-- /RESEARCH -->
       </main>
     </div>
     <script src="js/script.js" charset="utf-8"></script>

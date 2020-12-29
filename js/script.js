@@ -12,6 +12,7 @@ var app = new Vue(
       initialPath: "https://image.tmdb.org/t/p/w220_and_h330_face",
       visible: true,
       hide: true,
+      homepage: true,
       vote: [],
       voteOther: [],
       language: [],
@@ -20,18 +21,25 @@ var app = new Vue(
       selected: "ALL"
     },
 
+    created: function() {
+      this.turnToHomepage();
+    },
+
     methods: {
       searchFilm: function(){
         var self = this;
         self.selected = "ALL";
         self.visible = false;
         self.resultFor = self.searchedString;
+        console.log("OK");
         // IF SEARCHEDSTRING E' VUOTO ALLORA NON FA NESSUNA CHIAMATA AL SERVER METTE VISIBLE = FALSE E QUINI CANCELLA TUTTI I MOVIE-POSTER PRESENTI
         if(self.searchedString == ""){
           self.visible = false;
           self.hide = true;
+          self.turnToHomepage();
         } else{
           self.totalGenres = [];
+          self.homepage = false;
 
           // GET PER RICERCA SU FILM
           let getOne = axios
@@ -235,6 +243,26 @@ var app = new Vue(
             self.totalGenres.push(self.arrayGenres[x]);
           }
         }
+      },
+
+      turnToHomepage: function(){
+        var self = this;
+        self.films = [];
+        self.homepage = true;
+        axios
+        .get('https://api.themoviedb.org/3/trending/all/week', {
+          params: {
+            api_key: '00d4d16d41869351335359c44741a330'
+          }
+        })
+        .then((response) => {
+          console.log(response.data.results);
+          self.films = response.data.results;
+
+          self.vote = self.getArrayVote(self.films);
+          self.insertCast();
+          self.getGenres();
+        })
       }
     }
   }
