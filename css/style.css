@@ -41,29 +41,32 @@ header button:hover{
   outline: none;
 }
 
-header .selection{
+.selection{
   text-align: center;
+  margin-top: 12vh;
 }
-p{
-  color: white;
+.selection select {
+  width: 122px;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 main{
-  margin-top: 20vh;
+  margin-top: 30px;
   padding: 0 80px;
 }
 
-.popular-film{
+.title{
   text-align: center;
   color: white;
-  margin-bottom: 20px;
+  margin: 40px 0 30px;
 }
 
-.popular{
+.cards-container{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
 }
 
 .movie-poster{

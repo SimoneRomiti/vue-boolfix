@@ -22,26 +22,33 @@
           <button @click="searchFilm()" type="button" name="button"><strong>SEARCH</strong></button>
         </div>
 
-        <div v-if="hide == false || homepage" class="selection">
-          <select v-model="selected" class="" name="">
-            <option value="ALL">ALL</option>
-            <option v-for="element in totalGenres" :value="element">{{element}}</option>
-          </select>
-          <p>{{selected}}</p>
-        </div>
       </header>
       <!-- /LOGO RICERCA E SELECT -->
+
+      <div class="selection">
+        <select v-model="selected" class="" name="">
+          <option value="ALL">ALL</option>
+          <option v-for="element in totalGenres" :value="element">{{element}}</option>
+        </select>
+      </div>
 
       <main>
 
         <!-- HOMEPAGE -->
-        <h1 class="popular-film" v-if="hide">POPULAR FILMS / SERIES THIS WEEK <span v-if="selected != 'ALL'">(genre: {{selected}})</span></h1>
-        <div class="popular" v-if="homepage">
-          <div v-for="(film, index) in films" v-if="selected == 'ALL' || films[index].genres.includes(selected)" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
+        <h1 class="title"
+        v-if="homepage">POPULAR FILMS / SERIES THIS WEEK
+        <span v-if="selected != 'ALL'">(genre: {{ selected }})</span>
+        </h1>
+
+        <div class="cards-container" v-if="homepage">
+          <div class="movie-poster"
+          v-for="(film, index) in films"
+          v-if="selected == 'ALL' || films[index].genres.includes(selected)"
+          :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
 
             <div class="informations">
 
-              <div class="title spacing">
+              <div class="film-title spacing">
                 <strong>Titolo: </strong>
                 {{ film.title }} {{ film.name }}
               </div>
@@ -96,26 +103,31 @@
 
         <!-- RESEARCH -->
         <!-- TITOLI -->
-        <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL' && visible">
+        <h1 class="title" v-if="homepage == false && films.length > 3 && selected == 'ALL' && visible">
           TOP 3 FILMS / SERIES FOR "{{resultFor.toUpperCase()}}"
         </h1>
 
-        <h1 class="popular-film" v-else-if="hide == false && films.length <= 3 && selected == 'ALL' && visible">
+        <h1 class="title" v-else-if="homepage == false && films.length <= 3 && selected == 'ALL' && visible">
           RESULTS FOR "{{resultFor.toUpperCase()}}"
         </h1>
 
-        <h1 class="popular-film" v-if="hide == false && films.length == 0 && selected == 'ALL' && visible">
+        <h1 class="title" v-if="homepage == false && films.length == 0 && selected == 'ALL' && visible">
           No results
         </h1>
 
-        <h1 class="popular-film" v-if="selected != 'ALL' && homepage == false">RESULTS FOR "{{resultFor.toUpperCase()}}" GENRE: "{{selected}}"</h1>
+        <h1 class="title" v-if="selected != 'ALL' && homepage == false && visible">
+          RESULTS FOR "{{resultFor.toUpperCase()}}" GENRE: "{{selected}}"
+        </h1>
         <!-- /TITOLI -->
+
         <!-- POPULAR SEARCH -->
-        <div class="popular" v-if="homepage == false">
-          <div v-for="(film, index) in popularSearch" v-if="visible && (selected == 'ALL' || films[index].genres.includes(selected))" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
+        <div class="cards-container" v-if="homepage == false && visible">
+          <div class="movie-poster"
+          v-for="(film, index) in popularSearch"
+          v-if="selected == 'ALL' || films[index].genres.includes(selected)"  :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
             <div class="informations">
 
-              <div class="title spacing">
+              <div class="film-title spacing">
                 <strong>Titolo: </strong>
                 {{ film.title }} {{ film.name }}
               </div>
@@ -169,15 +181,18 @@
         <!-- /POPULAR SEARCH -->
 
         <!-- OTHER -->
-        <h1 class="popular-film" v-if="hide == false && films.length > 3 && selected == 'ALL' && visible">
+        <h1 class="title" v-if="homepage == false && films.length > 3 && selected == 'ALL' && visible">
           OTHER FILMS / SERIES FOR "{{resultFor.toUpperCase()}}"
         </h1>
 
-        <div class="popular">
-          <div v-if="visible && (selected == 'ALL' || films[index + 3].genres.includes(selected))" v-for="(film, index) in restSearch" class="movie-poster" :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
+        <div class="cards-container" v-if="homepage == false && visible">
+          <div class="movie-poster"
+          v-for="(film, index) in restSearch"
+          v-if="selected == 'ALL' || films[index + 3].genres.includes(selected)"
+          :style="(film.poster_path == null) ? {backgroundImage: 'url(' + notAvailableImage + ')'} : {backgroundImage: 'url(' + initialPath + film.poster_path + ')'}">
             <div class="informations">
 
-              <div class="title spacing">
+              <div class="film-title spacing">
                 <strong>Titolo: </strong>
                 {{ film.title }} {{ film.name }}
               </div>

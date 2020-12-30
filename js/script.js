@@ -10,15 +10,14 @@ var app = new Vue(
       resultFor: "",
       notAvailableImage: "img/image-not-available.png",
       initialPath: "https://image.tmdb.org/t/p/w220_and_h330_face",
-      visible: true,
-      hide: true,
+      selected: "ALL",
       homepage: true,
+      visible: true,
       vote: [],
       voteOther: [],
       language: [],
       popularSearch: [],
       restSearch: [],
-      selected: "ALL"
     },
 
     created: function() {
@@ -28,18 +27,15 @@ var app = new Vue(
     methods: {
       searchFilm: function(){
         var self = this;
-        self.selected = "ALL";
+        self.totalGenres = [];
         self.visible = false;
+        self.selected = "ALL";
         self.resultFor = self.searchedString;
         console.log("OK");
-        // IF SEARCHEDSTRING E' VUOTO ALLORA NON FA NESSUNA CHIAMATA AL SERVER METTE VISIBLE = FALSE E QUINI CANCELLA TUTTI I MOVIE-POSTER PRESENTI
+        // IF SEARCHEDSTRING E' VUOTO ALLORA NON FA NESSUNA CHIAMATA AL SERVER E TORNA ALLA HOMEPAGE
         if(self.searchedString == ""){
-          self.visible = false;
-          self.hide = true;
           self.turnToHomepage();
         } else{
-          self.totalGenres = [];
-          self.homepage = false;
 
           // GET PER RICERCA SU FILM
           let getOne = axios
@@ -100,8 +96,6 @@ var app = new Vue(
               i++;
             }
 
-            self.visible = true;
-
             // FUNZIONE PER CREAZIONE ARRAY VOTI
             self.vote = self.getArrayVote(self.popularSearch);
             self.voteOther = self.getArrayVote(self.restSearch);
@@ -112,7 +106,8 @@ var app = new Vue(
 
             // FUNZIONE PER INSERIMENTO GENERI SENZA DUPLICATI DEI FILM RICERCATI IN NUOVO ARRAY
             self.getGenres();
-            self.hide = false;
+            self.homepage = false;
+            self.visible = true;
             console.log("films", self.films);
           })
         }
@@ -248,11 +243,11 @@ var app = new Vue(
       turnToHomepage: function(){
         var self = this;
         self.films = [];
-        self.homepage = true;
         axios
         .get('https://api.themoviedb.org/3/trending/all/week', {
           params: {
-            api_key: '00d4d16d41869351335359c44741a330'
+            api_key: '00d4d16d41869351335359c44741a330',
+            language: 'it-IT'
           }
         })
         .then((response) => {
@@ -262,6 +257,7 @@ var app = new Vue(
           self.vote = self.getArrayVote(self.films);
           self.insertCast();
           self.getGenres();
+          self.homepage = true;
         })
       }
     }
