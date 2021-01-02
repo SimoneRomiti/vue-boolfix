@@ -11,8 +11,9 @@ var app = new Vue(
       notAvailableImage: "img/image-not-available.png",
       initialPath: "https://image.tmdb.org/t/p/w220_and_h330_face",
       selected: "ALL",
-      homepage: true,
-      visible: true,
+      homepage: false,
+      visible: false,
+      loading: true,
       vote: [],
       voteOther: [],
       language: [],
@@ -20,7 +21,7 @@ var app = new Vue(
       restSearch: [],
     },
 
-    created: function() {
+    mounted: function() {
       this.turnToHomepage();
     },
 
@@ -36,6 +37,9 @@ var app = new Vue(
         if(self.searchedString == ""){
           self.turnToHomepage();
         } else{
+          self.homepage = false;
+          self.loading = true;
+
 
           // GET PER RICERCA SU FILM
           let getOne = axios
@@ -106,7 +110,7 @@ var app = new Vue(
 
             // FUNZIONE PER INSERIMENTO GENERI SENZA DUPLICATI DEI FILM RICERCATI IN NUOVO ARRAY
             self.getGenres();
-            self.homepage = false;
+            self.loading = false;
             self.visible = true;
             console.log("films", self.films);
           })
@@ -243,6 +247,7 @@ var app = new Vue(
       turnToHomepage: function(){
         var self = this;
         self.films = [];
+        self.loading = true;
         axios
         .get('https://api.themoviedb.org/3/trending/all/week', {
           params: {
@@ -257,7 +262,11 @@ var app = new Vue(
           self.vote = self.getArrayVote(self.films);
           self.insertCast();
           self.getGenres();
-          self.homepage = true;
+          setTimeout(() => {
+            self.homepage = true;
+            self.loading = false;
+          }, 200)
+
         })
       }
     }

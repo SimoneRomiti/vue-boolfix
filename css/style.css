@@ -56,6 +56,26 @@ main{
   padding: 0 80px;
 }
 
+.prova{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #E40914;
+  font-size: 80px;
+}
+
+.prova i{
+  animation-name: spinner;
+  animation-duration: 0.8s;
+  animation-timing-function: ease-in-out;
+}
+@keyframes spinner{
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
 .title{
   text-align: center;
   color: white;
