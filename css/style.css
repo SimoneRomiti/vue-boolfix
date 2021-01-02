@@ -22,6 +22,7 @@ header{
 
 header img{
   height: 10vh;
+  line-height: 10vh;
 }
 
 header .search{
@@ -163,7 +164,25 @@ main{
 }
 /* FINE MODIFICA SCROLLBAR */
 
-
 .spacing{
   margin: 5px 0;
+}
+
+@media screen and (max-width: 600px){
+
+  header{
+    height: 7vh;
+  }
+  header input{
+    width: 100px;
+  }
+
+  header img{
+    height: 7vh;
+  }
+
+  header .search{
+    line-height: 7vh;
+  }
+
 }
