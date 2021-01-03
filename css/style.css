@@ -24,6 +24,9 @@ header img{
   height: 10vh;
   line-height: 10vh;
 }
+header img:hover{
+  cursor: pointer;
+}
 
 header .search{
   float: right;
@@ -70,6 +73,7 @@ main{
   animation-name: spinner;
   animation-duration: 0.8s;
   animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
 @keyframes spinner{
   100%{
@@ -108,7 +112,6 @@ main{
   color: white;
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   opacity: 0;
   transition: opacity .5s;
   overflow-y: auto;

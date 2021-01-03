@@ -171,13 +171,12 @@ var app = new Vue(
             for(var k = 0; k < 5; k++){
               if(responses[i].data.cast[k] != null && responses[i].data.cast[k] != ""){
                 arrayActor.push(responses[i].data.cast[k].name);
-
-                self.films[i] = {
-                  ...self.films[i],
-                  cast: arrayActor
-                };
               }
             }
+            self.films[i] = {
+              ...self.films[i],
+              cast: arrayActor
+            };
           }
           self.$forceUpdate();
         })
@@ -247,6 +246,10 @@ var app = new Vue(
       turnToHomepage: function(){
         var self = this;
         self.films = [];
+        self.totalGenres = [];
+        self.selected = "ALL";
+        self.homepage = false;
+        self.visible = false;
         self.loading = true;
         axios
         .get('https://api.themoviedb.org/3/trending/all/week', {
@@ -265,7 +268,7 @@ var app = new Vue(
           setTimeout(() => {
             self.homepage = true;
             self.loading = false;
-          }, 200)
+          }, 500)
 
         })
       }

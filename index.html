@@ -15,7 +15,7 @@
     <div id="container">
       <!-- LOGO RICERCA E SELECT -->
       <header>
-        <img src="img/netflix.png" alt="">
+        <img @click="turnToHomepage()" src="img/netflix.png" alt="">
 
           <div class="search">
           <input v-model="searchedString" @keydown="searchFilmEnterKey()" type="text" name="" value="">
