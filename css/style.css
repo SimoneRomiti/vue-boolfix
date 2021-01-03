@@ -180,6 +180,12 @@ main{
     width: 100px;
   }
 
+  header button{
+    font-size: 8px;
+    height: 25px;
+    vertical-align: middle;
+  }
+
   header img{
     height: 7vh;
   }

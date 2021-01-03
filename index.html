@@ -13,7 +13,7 @@
   </head>
   <body>
     <div id="container">
-      <!-- LOGO RICERCA E SELECT -->
+      <!-- LOGO E RICERCA -->
       <header>
         <img @click="turnToHomepage()" src="img/netflix.png" alt="">
 
@@ -23,14 +23,16 @@
         </div>
 
       </header>
-      <!-- /LOGO RICERCA E SELECT -->
+      <!-- /LOGO E RICERCA -->
 
+      <!-- SELECT -->
       <div class="selection">
         <select v-model="selected" class="" name="">
           <option value="ALL">ALL</option>
           <option v-for="element in totalGenres" :value="element">{{element}}</option>
         </select>
       </div>
+      <!-- SELECT -->
 
       <main>
         <div v-if="loading" class="prova">

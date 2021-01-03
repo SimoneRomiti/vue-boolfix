@@ -40,7 +40,6 @@ var app = new Vue(
           self.homepage = false;
           self.loading = true;
 
-
           // GET PER RICERCA SU FILM
           let getOne = axios
           .get('https://api.themoviedb.org/3/search/movie',
@@ -78,7 +77,6 @@ var app = new Vue(
               return b.popularity - a.popularity;
             })
 
-
             // RESTITUISCE AL MASSIMO I PRIMI 20 RISULTATI
             var i = 0;
             while(i < 20 && self.all[i] != null){
@@ -103,7 +101,6 @@ var app = new Vue(
             // FUNZIONE PER CREAZIONE ARRAY VOTI
             self.vote = self.getArrayVote(self.popularSearch);
             self.voteOther = self.getArrayVote(self.restSearch);
-
 
             // FUNZIONE PER INSERIMENTO CAST COME NUOVO OGGETTO DI FILMS[i]
             self.insertCast();
@@ -265,6 +262,7 @@ var app = new Vue(
           self.vote = self.getArrayVote(self.films);
           self.insertCast();
           self.getGenres();
+
           setTimeout(() => {
             self.homepage = true;
             self.loading = false;
