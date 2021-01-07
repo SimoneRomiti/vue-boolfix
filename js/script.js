@@ -32,7 +32,7 @@ var app = new Vue(
         self.visible = false;
         self.selected = "ALL";
         self.resultFor = self.searchedString;
-        console.log("OK");
+        
         // IF SEARCHEDSTRING E' VUOTO ALLORA NON FA NESSUNA CHIAMATA AL SERVER E TORNA ALLA HOMEPAGE
         if(self.searchedString == ""){
           self.turnToHomepage();
@@ -232,9 +232,9 @@ var app = new Vue(
           genres: self.arrayGenres
         }
 
-        // CREAZIONE DI ARRAY CONTENENTE TUTTI I GENERI PRESENTI NEI FILM RICERCATI SENZA GENERI DUPLICATI
+        // CREAZIONE DI ARRAY CONTENENTE TUTTI I GENERI PRESENTI NEI FILM RICERCATI SENZA GENERI DUPLICATI DA METTERE NELLA SELECT
         for(var x = 0; x < self.arrayGenres.length; x++){
-          if(!self.totalGenres.includes(self.arrayGenres[x] )){
+          if(!self.totalGenres.includes(self.arrayGenres[x])){
             self.totalGenres.push(self.arrayGenres[x]);
           }
         }
